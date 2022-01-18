@@ -14,12 +14,12 @@ import java.util.List;
  * @author Ilias Abdykarov
  */
 @RestController
-@RequestMapping("api/sensors")
 @RequiredArgsConstructor
+@RequestMapping("api/sensors")
 @CrossOrigin
 public class SensorResource {
 
-    private final SensorRepository sensorRepository;
+//    private final SensorRepository sensorRepository;
 
     @GetMapping("/alarm-system")
     @ResponseStatus(code = HttpStatus.OK)
@@ -39,7 +39,7 @@ public class SensorResource {
 
     }
 
-    @PutMapping("{sensorId}")
+    @PostMapping("{sensorId}/install")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void installSensorIntoDevice(@RequestBody DeviceDto deviceDto, @PathVariable Long sensorId){
 

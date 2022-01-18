@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * @author Ilias Abdykarov
  */
+@RestController
 @RequestMapping("api/home")
 @RequiredArgsConstructor
 @CrossOrigin
