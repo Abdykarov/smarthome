@@ -24,49 +24,29 @@ public class HomeResource {
     @PostMapping()
     @ResponseStatus(code = HttpStatus.CREATED)
     public void initHome() {
-        if (this.instance == null) {
-            this.instance = new HomeDto();
-        }
-        log.warn("Home already created");
     }
 
     @PutMapping("/{floorNumber}/rooms")
     @ResponseStatus(code = HttpStatus.OK)
     public void createRooms(@RequestBody RoomsDto roomsDto, @PathVariable Integer floorNumber) {
-        List<String> rooms = roomsDto.getRooms();
-        for (String room : rooms) {
-            if(floorNumber > this.instance.getFloorsCount()){
-               throw new RuntimeException("Invalid floor number");
-            }
-            this.instance.getRooms().put(floorNumber,room);
-        }
-        log.info("Rooms are placed in the first floor");
     }
 
     @PatchMapping("{floorNumber}")
     @ResponseStatus(code = HttpStatus.OK)
     public void setFloorsCount(@PathVariable int floorNumber){
-        this.instance.setFloorsCount(floorNumber);
-        log.info("Floors count changed");
+
     }
 
     @GetMapping()
     @ResponseStatus(code = HttpStatus.OK)
     public HomeDto getHomeConfiguration(){
-        if(this.instance == null){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "home not found"
-            );
-        }
-        log.info("House configuration returned");
-        return this.instance;
+       return this.instance;
     }
 
     @DeleteMapping()
     @ResponseStatus(code = HttpStatus.OK)
     public void deleteHouse(){
-        this.instance = null;
-        log.info("House configuration deleted");
+
     }
 
 }

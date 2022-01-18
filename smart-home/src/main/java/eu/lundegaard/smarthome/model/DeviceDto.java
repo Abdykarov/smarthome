@@ -17,7 +17,9 @@ public class DeviceDto implements DeviceListener{
     int consumedPower;
     int functionalityPercentage;
     String deviceName;
+    DeviceState state;
     int roomId;
+    Long id;
 
     public DeviceDto(String deviceName, int roomId) {
         this.deviceName = deviceName;
