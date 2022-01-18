@@ -1,6 +1,7 @@
 package eu.lundegaard.smarthome.model;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,7 +10,7 @@ import lombok.experimental.FieldDefaults;
  * @author Ilias Abdykarov
  */
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceDto implements DeviceListener{
 

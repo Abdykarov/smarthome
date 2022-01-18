@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SensorResource {
 
 
+    public void notifyDevices
 
     @PatchMapping("{event}")
     public void changeEvent(@PathVariable String event){

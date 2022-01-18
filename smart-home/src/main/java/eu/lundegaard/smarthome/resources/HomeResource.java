@@ -1,16 +1,14 @@
 package eu.lundegaard.smarthome.resources;
 
-import eu.lundegaard.smarthome.model.ConfigDto;
 import eu.lundegaard.smarthome.model.HomeDto;
 import eu.lundegaard.smarthome.model.RoomsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Ilias Abdykarov
@@ -23,13 +21,12 @@ public class HomeResource {
 
     private HomeDto instance;
 
-    @GetMapping()
-    @ResponseStatus(code = HttpStatus.OK)
+    @PostMapping()
+    @ResponseStatus(code = HttpStatus.CREATED)
     public void initHome() {
         if (this.instance == null) {
             this.instance = new HomeDto();
         }
-
         log.warn("Home already created");
     }
 
@@ -53,9 +50,23 @@ public class HomeResource {
         log.info("Floors count changed");
     }
 
-    @PostMapping()
-    public void createHouseByConfig(ConfigDto configDto){
+    @GetMapping()
+    @ResponseStatus(code = HttpStatus.OK)
+    public HomeDto getHomeConfiguration(){
+        if(this.instance == null){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "home not found"
+            );
+        }
+        log.info("House configuration returned");
+        return this.instance;
+    }
 
+    @DeleteMapping()
+    @ResponseStatus(code = HttpStatus.OK)
+    public void deleteHouse(){
+        this.instance = null;
+        log.info("House configuration deleted");
     }
 
 }
