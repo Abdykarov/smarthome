@@ -1,14 +1,19 @@
 package eu.lundegaard.smarthome.resources;
 
+import eu.lundegaard.smarthome.exception.DeviceNotFoundException;
 import eu.lundegaard.smarthome.model.DeviceDto;
 import eu.lundegaard.smarthome.model.DeviceState;
 import eu.lundegaard.smarthome.events.EventDto;
 import eu.lundegaard.smarthome.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * @author Ilias Abdykarov
@@ -19,13 +24,15 @@ import java.util.List;
 @CrossOrigin
 public class DeviceResource {
 
-    private final DeviceRepository deviceRepository;
+    List<DeviceDto> devices = Arrays.asList(new DeviceDto("TV", "Kitchen"), new DeviceDto("PC", "Living room"));
 
-    @GetMapping()
-    @ResponseStatus(code = HttpStatus.OK)
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<DeviceDto> findAll(){
-
-        return null;
+        if (devices.isEmpty()) {
+            throw new DeviceNotFoundException("Empty list", HttpStatus.NOT_FOUND);
+        }
+        return devices;
     }
 
     @PatchMapping("{deviceId}/{deviceState}")

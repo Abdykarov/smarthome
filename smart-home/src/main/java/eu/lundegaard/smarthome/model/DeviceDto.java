@@ -16,16 +16,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceDto implements DeviceListener {
 
+    static Long globalId = 1l;
     int consumedPower;
     int functionalityPercentage;
     String deviceName;
     DeviceState state;
-    int roomId;
+    String room;
     Long id;
 
-    public DeviceDto(String deviceName, int roomId) {
+    public DeviceDto(String deviceName, String room) {
         this.deviceName = deviceName;
-        this.roomId = roomId;
+        this.room = room;
+        this.id = globalId++;
         this.consumedPower = 0;
         this.functionalityPercentage = 100;
     }

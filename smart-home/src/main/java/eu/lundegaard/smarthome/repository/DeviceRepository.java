@@ -1,7 +1,9 @@
 package eu.lundegaard.smarthome.repository;
 
+import eu.lundegaard.smarthome.exception.DeviceNotFoundException;
 import eu.lundegaard.smarthome.model.DeviceDto;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -18,11 +20,14 @@ public class DeviceRepository {
     List<DeviceDto> devices = new ArrayList<>();
 
     public List<DeviceDto> findAll(){
+        if (devices.isEmpty()) {
+            throw new DeviceNotFoundException("Empty list", HttpStatus.NOT_FOUND);
+        }
         return devices;
     }
 
     public DeviceDto findById(Long id){
-        DeviceDto device = devices.stream()
+        return devices.stream()
                 .filter( x -> x.getId().equals(id))
                 .findAny()
                 .orElse(null);
