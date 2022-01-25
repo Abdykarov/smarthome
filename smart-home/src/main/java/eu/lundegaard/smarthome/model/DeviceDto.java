@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * @author Ilias Abdykarov
  */
@@ -17,10 +19,14 @@ import lombok.experimental.FieldDefaults;
 public class DeviceDto implements DeviceListener {
 
     static Long globalId = 1l;
+    @NotEmpty(message = "Please, provide a power")
     int consumedPower;
+    @NotEmpty(message = "Please, provide a power")
     int functionalityPercentage;
+    @NotEmpty(message = "Please, provide a power")
     String deviceName;
     DeviceState state;
+    @NotEmpty(message = "Please, provide a power")
     String room;
     Long id;
 
