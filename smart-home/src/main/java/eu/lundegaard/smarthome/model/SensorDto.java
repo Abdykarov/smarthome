@@ -1,5 +1,7 @@
 package eu.lundegaard.smarthome.model;
 
+import eu.lundegaard.smarthome.events.EventType;
+import eu.lundegaard.smarthome.observer.DeviceListener;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

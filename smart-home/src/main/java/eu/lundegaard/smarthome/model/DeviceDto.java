@@ -1,9 +1,11 @@
 package eu.lundegaard.smarthome.model;
 
+import eu.lundegaard.smarthome.events.EventDto;
+import eu.lundegaard.smarthome.events.GasEvent;
+import eu.lundegaard.smarthome.observer.DeviceListener;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 /**
@@ -12,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DeviceDto implements DeviceListener{
+public class DeviceDto implements DeviceListener {
 
     int consumedPower;
     int functionalityPercentage;
@@ -29,6 +31,10 @@ public class DeviceDto implements DeviceListener{
     }
 
     @Override
-    public void update(String event) {
+    public void update(EventDto eventDto) {
+        if (eventDto instanceof GasEvent) {
+            ((GasEvent) eventDto).notifyHouseElectricalOutlets();
+            ((GasEvent) eventDto).notifyHouseElectricalPanel();
+        }
     }
 }

@@ -22,30 +22,28 @@ public class HomeResource {
 
     private HomeDto instance;
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public void initHome() {
     }
 
     @PutMapping("/{floorNumber}/rooms")
-    @ResponseStatus(code = HttpStatus.OK)
-    public void createRooms(@RequestBody RoomsDto roomsDto, @PathVariable Integer floorNumber) {
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void createRooms(@PathVariable Integer floorNumber, @RequestBody RoomsDto roomsDto) {
+        // zkratka created
     }
 
     @PatchMapping("{floorNumber}")
-    @ResponseStatus(code = HttpStatus.OK)
     public void setFloorsCount(@PathVariable int floorNumber){
 
     }
 
-    @GetMapping()
-    @ResponseStatus(code = HttpStatus.OK)
+    @GetMapping
     public HomeDto getHomeConfiguration(){
        return this.instance;
     }
 
-    @DeleteMapping()
-    @ResponseStatus(code = HttpStatus.OK)
+    @DeleteMapping
     public void deleteHouse(){
 
     }

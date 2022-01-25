@@ -1,5 +1,10 @@
 # Task1
 
+Pracoval jsem na cardif catalogu, dokumentoval jsem API
+
+Tam byla použita maturita level 2 
+
+
 Momentálně pracuju na projektu ALD, implementuju autentizací komponentu pomoci nástroje Keycloak. 
 
 Používám tam hlavně maturity level 2 a 1.

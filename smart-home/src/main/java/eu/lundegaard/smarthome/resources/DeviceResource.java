@@ -2,13 +2,12 @@ package eu.lundegaard.smarthome.resources;
 
 import eu.lundegaard.smarthome.model.DeviceDto;
 import eu.lundegaard.smarthome.model.DeviceState;
-import eu.lundegaard.smarthome.model.HomeDto;
+import eu.lundegaard.smarthome.events.EventDto;
 import eu.lundegaard.smarthome.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,12 +24,13 @@ public class DeviceResource {
     @GetMapping()
     @ResponseStatus(code = HttpStatus.OK)
     public List<DeviceDto> findAll(){
+
         return null;
     }
 
-    @PatchMapping("{deviceId}")
+    @PatchMapping("{deviceId}/{deviceState}")
     @ResponseStatus(code = HttpStatus.OK)
-    public void changeState(@PathVariable Long deviceId, @RequestBody DeviceDto deviceDto){
+    public void changeState(@PathVariable Long deviceId, @PathVariable DeviceState deviceState){
     }
 
     @PutMapping("{deviceId}")
@@ -40,8 +40,8 @@ public class DeviceResource {
     }
 
     @PostMapping("{deviceId}")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void update(@PathVariable Long deviceId){
+    @ResponseStatus(code = HttpStatus.OK)
+    public void notify(@PathVariable Long deviceId, EventDto eventDto){
 
     }
 
