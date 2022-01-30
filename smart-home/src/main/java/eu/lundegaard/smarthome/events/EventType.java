@@ -5,10 +5,22 @@ package eu.lundegaard.smarthome.events;
  */
 public enum EventType implements EventStringOperation{
 
-    WIND {
+    STRONG_WIND {
         @Override
         public String returnEvent(){
             return "Wind started, windows are closing";
+        }
+    },
+    BREAK_IN {
+        @Override
+        public String returnEvent(){
+            return "Somebody wants to break in house, police was called and smart doors were locked";
+        }
+    },
+    FLOOD {
+        @Override
+        public String returnEvent(){
+            return "Water has been detected, alarm has been sent to the control panel";
         }
     },
     GAS {

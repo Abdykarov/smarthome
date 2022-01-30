@@ -2,9 +2,6 @@ package eu.lundegaard.smarthome.events;
 
 import eu.lundegaard.smarthome.observer.HouseListener;
 import eu.lundegaard.smarthome.observer.WindEventPublisher;
-import eu.lundegaard.smarthome.resources.HomeResource;
-
-import java.util.List;
 
 /**
  * @author Ilias Abdykarov

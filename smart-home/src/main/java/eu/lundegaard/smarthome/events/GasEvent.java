@@ -3,16 +3,9 @@ package eu.lundegaard.smarthome.events;
 import eu.lundegaard.smarthome.house.HouseEmbeddedElement;
 import eu.lundegaard.smarthome.iterator.ElectricalOutletIterator;
 import eu.lundegaard.smarthome.iterator.EmbeddedElementIterator;
-import eu.lundegaard.smarthome.model.HomeDto;
 import eu.lundegaard.smarthome.observer.GasEventPublisher;
 import eu.lundegaard.smarthome.observer.HouseListener;
-import eu.lundegaard.smarthome.resources.HomeResource;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Ilias Abdykarov
@@ -31,11 +24,6 @@ public class GasEvent extends EventDto implements GasEventPublisher {
 
     @Override
     public void notifyHouseElectricalOutlets() {
-        HomeDto houseListener = (HomeDto) houseListeners.get(1);
-        EmbeddedElementIterator electricalOutletIterator = houseListener.createElectricalOutletIterator();
-        while (electricalOutletIterator.hasNext()){
-            HouseEmbeddedElement next = electricalOutletIterator.getNext();
 
-        }
     }
 }

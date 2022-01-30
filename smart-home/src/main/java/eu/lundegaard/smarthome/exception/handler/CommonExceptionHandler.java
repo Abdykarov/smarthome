@@ -1,5 +1,7 @@
-package eu.lundegaard.smarthome.exception;
+package eu.lundegaard.smarthome.exception.handler;
 
+import eu.lundegaard.smarthome.exception.AppRequestException;
+import eu.lundegaard.smarthome.exception.AppResponseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
