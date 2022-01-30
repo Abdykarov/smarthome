@@ -14,9 +14,9 @@ public class DeviceNotFoundException extends AppRequestException{
     private final String message;
     private final HttpStatus httpStatus;
 
-    public DeviceNotFoundException(String message, HttpStatus httpStatus) {
-        super(message, httpStatus);
-        this.message = message;
+    public DeviceNotFoundException(HttpStatus httpStatus) {
+        super("Device not found", httpStatus);
+        this.message = "Device not found";
         this.httpStatus = httpStatus;
     }
 }

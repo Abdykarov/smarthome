@@ -8,6 +8,7 @@ import eu.lundegaard.smarthome.repository.DeviceRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,6 @@ import java.util.concurrent.RecursiveTask;
 @RequestMapping("api/devices")
 @CrossOrigin
 public class DeviceResource {
-
     List<DeviceDto> devices = Arrays.asList(new DeviceDto("TV", "Kitchen"), new DeviceDto("PC", "Living room"));
 
     @Operation(
@@ -38,10 +38,11 @@ public class DeviceResource {
             @ApiResponse(responseCode = "200", description = "Devices returned"),
             @ApiResponse(responseCode = "404", description = "Devices not found")
     })
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<DeviceDto> findAll(){
         if (devices.isEmpty()) {
-            throw new DeviceNotFoundException("Empty list", HttpStatus.NOT_FOUND);
+            throw new DeviceNotFoundException(HttpStatus.NOT_FOUND);
         }
         return devices;
     }
@@ -49,7 +50,13 @@ public class DeviceResource {
     @PatchMapping("{deviceId}/{deviceState}")
     @ResponseStatus(code = HttpStatus.OK)
     public void changeState(@PathVariable Long deviceId, @PathVariable DeviceState deviceState){
+        DeviceDto deviceDto = devices.stream().filter(x -> x.getId().equals(deviceId))
+                .findFirst()
+                .orElseThrow(() -> new DeviceNotFoundException(HttpStatus.NOT_FOUND));
+        deviceDto.setState(deviceState);
     }
+
+
 
     @PutMapping("{deviceId}")
     @ResponseStatus(code = HttpStatus.OK)

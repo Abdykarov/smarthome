@@ -2,10 +2,14 @@ package eu.lundegaard.smarthome.resources;
 
 import eu.lundegaard.smarthome.repository.DeviceRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.tomcat.util.json.JSONParser;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Ilias Abdykarov
  */
+@RunWith(SpringRunner.class)
 @WebMvcTest(DeviceResource.class)
 class DeviceResourceTest {
 
@@ -29,7 +34,7 @@ class DeviceResourceTest {
     private MockMvc mockMvc;
 
     @Test
-    public void findAllAPI() throws Exception {
+    void findAllAPI() throws Exception {
 
         this.mockMvc.perform( MockMvcRequestBuilders
                 .get("/api/devices")
@@ -40,4 +45,34 @@ class DeviceResourceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").isNotEmpty());
     }
 
+    @Test
+    void changeState() throws Exception{
+        this.mockMvc.perform( MockMvcRequestBuilders
+                        .patch("/api/devices/1/BROKEN")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    void changeState_StateNotExists() throws Exception{
+        this.mockMvc.perform( MockMvcRequestBuilders
+                        .patch("/api/devices/1/OLD")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void updateDevice() throws Exception{
+        this.mockMvc.perform( MockMvcRequestBuilders
+                        .patch("/api/devices/1")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(asJsonString)
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+    }
 }

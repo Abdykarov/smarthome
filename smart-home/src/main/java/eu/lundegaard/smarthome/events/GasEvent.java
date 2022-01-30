@@ -17,12 +17,8 @@ import java.util.List;
 /**
  * @author Ilias Abdykarov
  */
-@AllArgsConstructor
 @Slf4j
 public class GasEvent extends EventDto implements GasEventPublisher {
-
-    private HomeResource homeResource;
-    private final List<HouseListener> houseListeners = List.of(homeResource.getHomeConfiguration());
 
     public GasEvent(String eventMessage) {
         super(EventType.GAS.returnEvent());

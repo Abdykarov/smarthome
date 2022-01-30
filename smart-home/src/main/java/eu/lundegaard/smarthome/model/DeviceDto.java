@@ -2,6 +2,7 @@ package eu.lundegaard.smarthome.model;
 
 import eu.lundegaard.smarthome.events.EventDto;
 import eu.lundegaard.smarthome.events.GasEvent;
+import eu.lundegaard.smarthome.events.WindEvent;
 import eu.lundegaard.smarthome.observer.DeviceListener;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,9 @@ public class DeviceDto implements DeviceListener {
         if (eventDto instanceof GasEvent) {
             ((GasEvent) eventDto).notifyHouseElectricalOutlets();
             ((GasEvent) eventDto).notifyHouseElectricalPanel();
+        } else if (eventDto instanceof WindEvent) {
+            ((WindEvent) eventDto).notifyHouseWindows();
+            ((WindEvent) eventDto).notifyHouseBlinds();
         }
     }
 }
