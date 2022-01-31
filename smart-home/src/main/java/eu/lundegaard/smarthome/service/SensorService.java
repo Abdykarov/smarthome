@@ -1,11 +1,9 @@
 package eu.lundegaard.smarthome.service;
 
-import eu.lundegaard.smarthome.dto.DeviceResponseDto;
-import eu.lundegaard.smarthome.dto.SensorResponseDto;
+import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
 import eu.lundegaard.smarthome.events.EventType;
-import eu.lundegaard.smarthome.model.SensorState;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import eu.lundegaard.smarthome.model.sensor.SensorState;
 
 import java.util.List;
 

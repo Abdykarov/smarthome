@@ -1,13 +1,11 @@
-package eu.lundegaard.smarthome.dto;
+package eu.lundegaard.smarthome.dto.response;
 
-import eu.lundegaard.smarthome.model.SensorState;
-import eu.lundegaard.smarthome.model.SensorType;
+import eu.lundegaard.smarthome.model.sensor.SensorState;
+import eu.lundegaard.smarthome.model.sensor.SensorType;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 /**
  * @author Ilias Abdykarov

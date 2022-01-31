@@ -1,4 +1,4 @@
-package eu.lundegaard.smarthome.model;
+package eu.lundegaard.smarthome.model.device;
 
 /**
  * @author Ilias Abdykarov

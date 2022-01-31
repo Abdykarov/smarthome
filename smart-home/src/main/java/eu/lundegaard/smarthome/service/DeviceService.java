@@ -1,9 +1,9 @@
 package eu.lundegaard.smarthome.service;
 
-import eu.lundegaard.smarthome.dto.DeviceRequestDto;
-import eu.lundegaard.smarthome.dto.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.request.DeviceRequestDto;
+import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
 import eu.lundegaard.smarthome.events.EventDto;
-import eu.lundegaard.smarthome.model.DeviceState;
+import eu.lundegaard.smarthome.model.device.DeviceState;
 
 import java.util.List;
 

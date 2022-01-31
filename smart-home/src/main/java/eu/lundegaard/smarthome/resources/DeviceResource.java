@@ -1,14 +1,16 @@
 package eu.lundegaard.smarthome.resources;
 
-import eu.lundegaard.smarthome.dto.DeviceRequestDto;
-import eu.lundegaard.smarthome.dto.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.request.DeviceRequestDto;
+import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
 import eu.lundegaard.smarthome.events.EventDto;
-import eu.lundegaard.smarthome.model.DeviceState;
+import eu.lundegaard.smarthome.model.device.DeviceState;
+import eu.lundegaard.smarthome.service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,22 +20,23 @@ import java.util.List;
  * @author Ilias Abdykarov
  */
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("api/devices")
+@Validated
 public class DeviceResource {
+
+    private DeviceService deviceService;
 
     @Operation(
             summary = "Finds all devices in home",
             operationId = "getDevices",
             description = "Returns device all dtos or exception in case of empty list")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Devices returned"),
-            @ApiResponse(responseCode = "404", description = "Devices not found")
+            @ApiResponse(responseCode = "200", description = "Devices returned")
     })
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<DeviceResponseDto> findAll(){
-        return null;
+        return deviceService.findAllDevices();
     }
 
     @Operation(
@@ -42,11 +45,12 @@ public class DeviceResource {
             description = "Finds device by id and changes state")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Device's state has changed"),
+            @ApiResponse(responseCode = "400", description = "Invalid state has been provided"),
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
     @PatchMapping("{deviceId}/{deviceState}")
-    public void changeState(@PathVariable Long deviceId, @PathVariable DeviceState deviceState){
-
+    public DeviceResponseDto changeState(@PathVariable Long deviceId, @PathVariable DeviceState deviceState){
+        return deviceService.changeDeviceState(deviceId, deviceState);
     }
 
     @Operation(
@@ -55,12 +59,13 @@ public class DeviceResource {
             description = "Finds device by id and updates device data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Device's data has been updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid state has been provided"),
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
-    @PutMapping("{deviceId}")
-    @ResponseStatus(code = HttpStatus.OK)
-    public void updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequestDto deviceDto){
-
+    @PutMapping(value = "{deviceId}", consumes = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public DeviceResponseDto updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequestDto deviceDto){
+        return deviceService.updateDevice(deviceId, deviceDto);
     }
 
     @Operation(
@@ -73,8 +78,8 @@ public class DeviceResource {
     })
     @PostMapping("{deviceId}/notify")
     @ResponseStatus(code = HttpStatus.OK)
-    public void notify(@PathVariable Long deviceId, EventDto eventDto){
-
+    public void notify(@PathVariable Long deviceId, @RequestBody EventDto eventDto){
+        deviceService.notify(deviceId, eventDto);
     }
 
     @Operation(
@@ -83,12 +88,12 @@ public class DeviceResource {
             description = "Finds device by id and call update method")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Device has been successfully created"),
-            @ApiResponse(responseCode = "404", description = "Device not found")
+            @ApiResponse(responseCode = "400", description = "Invalid state has been provided")
     })
-    @PostMapping("{deviceId}")
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public void createDevice(@RequestBody DeviceRequestDto deviceDto){
-
+        deviceService.createDevice(deviceDto);
     }
 
     @Operation(
@@ -100,9 +105,8 @@ public class DeviceResource {
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
     @DeleteMapping("{deviceId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public void deleteDevice(@PathVariable Long deviceId){
-
+        deviceService.deleteDevice(deviceId);
     }
 
 }

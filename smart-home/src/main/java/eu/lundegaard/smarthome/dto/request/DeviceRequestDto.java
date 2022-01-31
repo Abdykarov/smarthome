@@ -1,6 +1,6 @@
-package eu.lundegaard.smarthome.dto;
+package eu.lundegaard.smarthome.dto.request;
 
-import eu.lundegaard.smarthome.model.DeviceState;
+import eu.lundegaard.smarthome.model.device.DeviceState;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

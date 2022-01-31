@@ -1,8 +1,8 @@
 package eu.lundegaard.smarthome.resources;
 
-import eu.lundegaard.smarthome.dto.DeviceResponseDto;
-import eu.lundegaard.smarthome.dto.SensorResponseDto;
-import eu.lundegaard.smarthome.model.SensorState;
+import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
+import eu.lundegaard.smarthome.model.sensor.SensorState;
 import eu.lundegaard.smarthome.events.EventType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

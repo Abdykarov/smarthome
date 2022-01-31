@@ -1,18 +1,20 @@
-package eu.lundegaard.smarthome.dto;
+package eu.lundegaard.smarthome.model.device;
 
-import eu.lundegaard.smarthome.model.DeviceState;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * @author Ilias Abdykarov
  */
 @Data
-@Accessors(chain = true)
-public class DeviceResponseDto {
+@AllArgsConstructor
+public abstract class Device {
     private int consumedPower;
     private int functionalityPercentage;
     private String deviceName;
     private DeviceState state;
     private String room;
+
+    public Device() {
+    }
 }
