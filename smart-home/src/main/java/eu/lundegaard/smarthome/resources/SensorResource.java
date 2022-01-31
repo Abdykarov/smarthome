@@ -1,11 +1,9 @@
 package eu.lundegaard.smarthome.resources;
 
-import eu.lundegaard.smarthome.dto.DeviceDto;
+import eu.lundegaard.smarthome.dto.DeviceResponseDto;
 import eu.lundegaard.smarthome.dto.SensorResponseDto;
 import eu.lundegaard.smarthome.model.SensorState;
-import eu.lundegaard.smarthome.observer.DeviceListener;
 import eu.lundegaard.smarthome.events.EventType;
-import eu.lundegaard.smarthome.repository.SensorRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -72,7 +70,7 @@ public class SensorResource {
             @ApiResponse(responseCode = "404", description = "Sensor not found")
     })
     @GetMapping("{sensorId}/listeners")
-    public List<DeviceDto> getObservers(@PathVariable Long sensorId){
+    public List<DeviceResponseDto> getObservers(@PathVariable Long sensorId){
         return null;
     }
 

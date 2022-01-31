@@ -1,7 +1,7 @@
 package eu.lundegaard.smarthome.resources;
 
-import eu.lundegaard.smarthome.exception.DeviceNotFoundException;
-import eu.lundegaard.smarthome.dto.DeviceDto;
+import eu.lundegaard.smarthome.dto.DeviceRequestDto;
+import eu.lundegaard.smarthome.dto.DeviceResponseDto;
 import eu.lundegaard.smarthome.events.EventDto;
 import eu.lundegaard.smarthome.model.DeviceState;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,8 +32,8 @@ public class DeviceResource {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<DeviceDto> findAll(){
-
+    public List<DeviceResponseDto> findAll(){
+        return null;
     }
 
     @Operation(
@@ -60,7 +59,7 @@ public class DeviceResource {
     })
     @PutMapping("{deviceId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public void updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceDto deviceDto){
+    public void updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequestDto deviceDto){
 
     }
 
@@ -72,9 +71,23 @@ public class DeviceResource {
             @ApiResponse(responseCode = "200", description = "Device has been successfully notified"),
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
-    @PostMapping("{deviceId}")
+    @PostMapping("{deviceId}/notify")
     @ResponseStatus(code = HttpStatus.OK)
     public void notify(@PathVariable Long deviceId, EventDto eventDto){
+
+    }
+
+    @Operation(
+            summary = "Methods notifies device to do some action depending on event",
+            operationId = "notifyDevice",
+            description = "Finds device by id and call update method")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Device has been successfully created"),
+            @ApiResponse(responseCode = "404", description = "Device not found")
+    })
+    @PostMapping("{deviceId}")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void createDevice(@RequestBody DeviceRequestDto deviceDto){
 
     }
 

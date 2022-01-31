@@ -16,10 +16,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include =
         JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = WindEvent.class, name = "WIND_EVENT"),
-        @JsonSubTypes.Type(value = GasEvent.class, name = "GAS_EVENT")
-})
+//@JsonSubTypes({
+//        @JsonSubTypes.Type(value = WindEvent.class, name = "WIND_EVENT"),
+//        @JsonSubTypes.Type(value = GasEvent.class, name = "GAS_EVENT")
+//})
 public abstract class EventDto {
 
 }
