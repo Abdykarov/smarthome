@@ -65,7 +65,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void changeState_Success() throws Exception{
+    void changeState_Success() throws Exception {
         mockMvc.perform(patch("/api/devices/1/IDLE"))
                 .andExpect(status().isOk());
         deviceCaptor = ArgumentCaptor.forClass(DeviceState.class);
@@ -75,7 +75,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void changeState_DeviceNotFound() throws Exception{
+    void changeState_DeviceNotFound() throws Exception {
         doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).changeDeviceState(1l, DeviceState.IDLE);
 
         mockMvc.perform(patch("/api/devices/1/IDLE"))
@@ -85,7 +85,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void updateDevice_Success() throws Exception{
+    void updateDevice_Success() throws Exception {
         DeviceRequestDto mockRequestDto = createMockRequestDto();
         DeviceResponseDto mockResponseDto = createMockResponseDto();
         when(deviceService.updateDevice(1l, mockRequestDto)).thenReturn(mockResponseDto);
@@ -103,7 +103,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void updateDevice_ValidationTest() throws Exception{
+    void updateDevice_ValidationTest() throws Exception {
         DeviceRequestDto mockRequestDto = createMockRequestDto()
                 .setDeviceName("");
         DeviceResponseDto mockResponseDto = createMockResponseDto();
@@ -122,7 +122,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void updateDevice_DeviceNotFound() throws Exception{
+    void updateDevice_DeviceNotFound() throws Exception {
         DeviceRequestDto mockRequestDto = createMockRequestDto();
         doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).updateDevice(1l, mockRequestDto);
 
@@ -135,7 +135,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void notifyDevice_EventDtoPassing() throws Exception{
+    void notifyDevice_EventDtoPassing() throws Exception {
         WindEvent windEvent = new WindEvent();
 
         mockMvc.perform(post("/api/devices/1/notify")
@@ -147,7 +147,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void notifyDevice_DeviceNotFound() throws Exception{
+    void notifyDevice_DeviceNotFound() throws Exception {
         WindEvent windEvent = new WindEvent();
         doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).notify(1l, windEvent);
 
@@ -160,7 +160,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void createDevice_CreatedDevice() throws Exception{
+    void createDevice_CreatedDevice() throws Exception {
         DeviceRequestDto mockRequestDto = createMockRequestDto();
 
         mockMvc.perform(post("/api/devices")
@@ -172,7 +172,7 @@ class DeviceResourceTest implements WithAssertions {
     }
 
     @Test
-    void deleteDevice_DeletedDevice() throws Exception{
+    void deleteDevice_DeletedDevice() throws Exception {
         mockMvc.perform(delete("/api/devices/1"))
                 .andExpect(status().isOk());
 
