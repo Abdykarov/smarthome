@@ -1,4 +1,4 @@
-package eu.lundegaard.smarthome.dto.response;
+package eu.lundegaard.smarthome.dto.request;
 
 import eu.lundegaard.smarthome.model.sensor.SensorState;
 import eu.lundegaard.smarthome.model.sensor.SensorType;

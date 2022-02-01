@@ -1,8 +1,7 @@
 package eu.lundegaard.smarthome.resources;
 
-import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
-import eu.lundegaard.smarthome.dto.response.SensorRequestDto;
-import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
+import eu.lundegaard.smarthome.dto.response.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.request.SensorRequestDto;
 import eu.lundegaard.smarthome.model.sensor.SensorState;
 import eu.lundegaard.smarthome.events.EventType;
 import eu.lundegaard.smarthome.service.SensorService;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

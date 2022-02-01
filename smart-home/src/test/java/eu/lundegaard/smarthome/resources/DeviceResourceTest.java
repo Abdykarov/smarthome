@@ -2,24 +2,20 @@ package eu.lundegaard.smarthome.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.lundegaard.smarthome.dto.request.DeviceRequestDto;
-import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
-import eu.lundegaard.smarthome.events.EventDto;
+import eu.lundegaard.smarthome.dto.response.DeviceResponseDto;
 import eu.lundegaard.smarthome.events.WindEvent;
 import eu.lundegaard.smarthome.exception.DeviceNotFoundException;
 import eu.lundegaard.smarthome.model.device.DeviceState;
-import eu.lundegaard.smarthome.model.device.SmartWindow;
 import eu.lundegaard.smarthome.service.DeviceService;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package eu.lundegaard.smarthome.dto.request;
+package eu.lundegaard.smarthome.dto.response;
 
 import eu.lundegaard.smarthome.model.device.DeviceState;
 import lombok.Data;
