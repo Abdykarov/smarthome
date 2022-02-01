@@ -1,6 +1,7 @@
 package eu.lundegaard.smarthome.service;
 
 import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.response.SensorRequestDto;
 import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
 import eu.lundegaard.smarthome.events.EventType;
 import eu.lundegaard.smarthome.model.sensor.SensorState;
@@ -29,9 +30,9 @@ public interface SensorService {
 
     /**
      * Method creates a new sensor
-     * @param sensorResponseDto - returned sensor dto
+     * @param sensorRequestDto - returned sensor dto
      */
-    void createSensor(SensorResponseDto sensorResponseDto);
+    void createSensor(SensorRequestDto sensorRequestDto);
 
     /**
      * Method returns all installed devices

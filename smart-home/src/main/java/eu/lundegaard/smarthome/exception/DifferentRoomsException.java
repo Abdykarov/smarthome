@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 @Setter
-public class DeviceInUseByAnotherSensor extends AppRequestException{
+public class DifferentRoomsException extends AppRequestException{
     private final String message;
     private final HttpStatus httpStatus;
 
-    public DeviceInUseByAnotherSensor(HttpStatus httpStatus) {
+    public DifferentRoomsException(HttpStatus httpStatus) {
         super("Sensor or room not found", httpStatus);
         this.message = "Device not found";
         this.httpStatus = httpStatus;

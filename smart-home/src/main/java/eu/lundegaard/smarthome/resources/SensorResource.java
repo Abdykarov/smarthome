@@ -1,6 +1,7 @@
 package eu.lundegaard.smarthome.resources;
 
 import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.response.SensorRequestDto;
 import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
 import eu.lundegaard.smarthome.model.sensor.SensorState;
 import eu.lundegaard.smarthome.events.EventType;
@@ -48,7 +49,7 @@ public class SensorResource {
     })
     @PatchMapping("{sensorId}/{state}")
     public void changeSensorState(@PathVariable Long sensorId, @PathVariable SensorState state){
-
+        sensorService.changeSensorState(sensorId, state);
     }
 
     @Operation(
@@ -61,8 +62,8 @@ public class SensorResource {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createSensor(@RequestBody SensorResponseDto sensorResponseDto){
-
+    public void createSensor(@RequestBody SensorRequestDto sensorResponseDto){
+        sensorService.createSensor(sensorResponseDto);
     }
 
     @Operation(
@@ -75,7 +76,7 @@ public class SensorResource {
     })
     @GetMapping("{sensorId}/listeners")
     public List<DeviceResponseDto> getObservers(@PathVariable Long sensorId){
-        return null;
+        return sensorService.getObservers(sensorId);
     }
 
     @Operation(
@@ -85,11 +86,12 @@ public class SensorResource {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Device has been installed"),
             @ApiResponse(responseCode = "409", description = "Device already in use by another sensor"),
+            @ApiResponse(responseCode = "403", description = "Device and sensor are in different rooms"),
             @ApiResponse(responseCode = "404", description = "Sensor not found")
     })
     @PutMapping("{sensorId}/listeners/{listenerId}")
     public void attachSubscriber(@PathVariable Long sensorId, @PathVariable Long listenerId) {
-
+        sensorService.attachSubscriber(sensorId, listenerId);
     }
 
     @Operation(
@@ -102,7 +104,7 @@ public class SensorResource {
     })
     @DeleteMapping("{sensorId}/listeners/{listenerId}")
     public void detachSubscriber(@PathVariable Long sensorId, @PathVariable Long listenerId) {
-
+        sensorService.detachSubscriber(sensorId, listenerId);
     }
 
 

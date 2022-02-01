@@ -1,6 +1,7 @@
 package eu.lundegaard.smarthome.service.impl;
 
 import eu.lundegaard.smarthome.dto.request.DeviceResponseDto;
+import eu.lundegaard.smarthome.dto.response.SensorRequestDto;
 import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
 import eu.lundegaard.smarthome.events.EventType;
 import eu.lundegaard.smarthome.model.sensor.SensorState;
@@ -26,7 +27,7 @@ public class SensorServiceImpl implements SensorService {
     }
 
     @Override
-    public void createSensor(SensorResponseDto sensorResponseDto) {
+    public void createSensor(SensorRequestDto sensorRequestDto) {
 
     }
 
