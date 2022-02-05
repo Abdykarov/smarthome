@@ -12,10 +12,16 @@ import eu.lundegaard.smarthome.model.sensor.SensorType;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.Mockito.*;
 
@@ -24,15 +30,14 @@ import java.util.List;
 /**
  * @author Ilias Abdykarov, ilias.abdykarov@lundegaard.eu 2/1/2022 4:32 PM
  */
+@ExtendWith(MockitoExtension.class)
 class SensorMapperTest implements WithAssertions {
 
-    private final SensorMapper sensorMapper = Mappers.getMapper(SensorMapper.class);
+    @Mock
+    private DeviceMapper deviceMapper;
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    DeviceMapper deviceMapper;
+    @InjectMocks
+    private SensorMapperImpl sensorMapper;
 
     @Test
     void toResponse() {
@@ -43,14 +48,17 @@ class SensorMapperTest implements WithAssertions {
         Sensor sensor = new Sensor()
                 .setConnectedDevices(List.of(controlPanel))
                 .setSensorType(SensorType.SMOKE_SENSOR)
+                .setRoom("Hall")
                 .setSensorState(SensorState.IDLE);
 
         SensorResponseDto sensorResponseDto = sensorMapper.toResponse(sensor);
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            assertThat(sensorResponseDto.getConnectedDevices().stream().findFirst().get().getDeviceName())
-                    .isEqualTo(sensor.getConnectedDevices().stream().findFirst().get().getDeviceName());
-            assertThat(sensorResponseDto.getSensorType()).isEqualTo(sensor.getSensorType());
+            assertThat(sensorResponseDto.getConnectedDevices().get(0).getDeviceName())
+                    .isEqualTo("Control panel");
+            assertThat(sensorResponseDto.getSensorType()).isEqualTo(SensorType.SMOKE_SENSOR);
+            assertThat(sensorResponseDto.getSensorState()).isEqualTo(SensorState.IDLE);
+            assertThat(sensorResponseDto.getRoom()).isEqualTo("Hall");
         });
     }
 

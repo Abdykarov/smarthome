@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,11 @@ import java.util.List;
  * @author Ilias Abdykarov
  */
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("api/devices")
-@Validated
 public class DeviceResource {
 
-    private DeviceService deviceService;
+    private final DeviceService deviceService;
 
     @Operation(
             summary = "Finds all devices in home",
@@ -62,8 +62,7 @@ public class DeviceResource {
             @ApiResponse(responseCode = "400", description = "Invalid state has been provided"),
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
-    @PutMapping(value = "{deviceId}", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "{deviceId}")
     public DeviceResponseDto updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequestDto deviceDto){
         return deviceService.updateDevice(deviceId, deviceDto);
     }

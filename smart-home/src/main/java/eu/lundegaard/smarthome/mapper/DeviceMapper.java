@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 /**
  * @author Ilias Abdykarov, ilias.abdykarov@lundegaard.eu 2/1/2022 4:07 PM
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface DeviceMapper {
 
     DeviceResponseDto toResponse(Device device);

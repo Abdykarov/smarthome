@@ -102,19 +102,13 @@ class DeviceResourceTest implements WithAssertions {
     void updateDevice_ValidationTest() throws Exception {
         DeviceRequestDto mockRequestDto = createMockRequestDto()
                 .setDeviceName("");
-        DeviceResponseDto mockResponseDto = createMockResponseDto();
-        when(deviceService.updateDevice(1l, mockRequestDto)).thenReturn(mockResponseDto);
 
         mockMvc.perform(put("/api/devices/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createJson(mockRequestDto)))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
 
-        verify(deviceService).updateDevice(1L,mockRequestDto);
-        SoftAssertions.assertSoftly(softAssertions -> {
-            assertThat(mockRequestDto.getDeviceName()).isEqualTo("");
-            assertThat(mockResponseDto.getState()).isEqualTo(DeviceState.ACTIVE);
-        });
+        verifyNoInteractions(deviceService);
     }
 
     @Test
