@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class Sensor {
+    private Long id;
     private SensorType sensorType;
     private SensorState sensorState;
     private List<Device> connectedDevices;
