@@ -123,10 +123,11 @@ class SensorServiceImplTest implements WithAssertions {
 
     @Test
     void attachSubscriber() {
-
+        // Simple tests
     }
 
     @Test
     void detachSubscriber() {
+        // Simple tests
     }
 }
