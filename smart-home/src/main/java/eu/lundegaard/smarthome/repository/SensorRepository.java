@@ -19,4 +19,6 @@ public interface SensorRepository {
     Sensor update(Sensor sensor);
 
     void deleteById(Long sensorId);
+
+    List<Sensor> findAllByRoom(String hall);
 }

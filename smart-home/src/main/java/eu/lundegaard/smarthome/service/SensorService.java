@@ -2,6 +2,7 @@ package eu.lundegaard.smarthome.service;
 
 import eu.lundegaard.smarthome.dto.response.DeviceResponseDto;
 import eu.lundegaard.smarthome.dto.request.SensorRequestDto;
+import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
 import eu.lundegaard.smarthome.events.EventType;
 import eu.lundegaard.smarthome.model.sensor.SensorState;
 
@@ -14,18 +15,17 @@ public interface SensorService {
 
     /**
      * Makes all sensors placed in the room to notify all attached devices to do some action depending on event
-     * @param sensorId - id of sensor
      * @param room - name of room
      * @param eventType - type of event
      */
-    void reactToExternalEvent(Long sensorId, String room, EventType eventType);
+    void reactToExternalEvent(String room, EventType eventType);
 
     /**
      * Method changes sensor state
      * @param sensorId - id of sensor
      * @param state - new state to set
      */
-    void changeSensorState(Long sensorId, SensorState state);
+    SensorResponseDto changeSensorState(Long sensorId, SensorState state);
 
     /**
      * Method creates a new sensor

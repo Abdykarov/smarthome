@@ -3,6 +3,7 @@ package eu.lundegaard.smarthome.service.impl;
 import eu.lundegaard.smarthome.dto.request.DeviceRequestDto;
 import eu.lundegaard.smarthome.dto.response.DeviceResponseDto;
 import eu.lundegaard.smarthome.events.EventDto;
+import eu.lundegaard.smarthome.events.WindEvent;
 import eu.lundegaard.smarthome.exception.DeviceNotFoundException;
 import eu.lundegaard.smarthome.mapper.DeviceMapper;
 import eu.lundegaard.smarthome.model.device.Device;
@@ -46,21 +47,41 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceResponseDto updateDevice(Long deviceId, DeviceRequestDto deviceDto) {
-        return null;
+        Device device = deviceRepository.findById(deviceId);
+        if (device == null) {
+            throw new DeviceNotFoundException(HttpStatus.NOT_FOUND);
+        }
+
+        Device mapToExistionEntity = deviceMapper.mapToExistionEntity(device, deviceDto);
+        Device save = deviceRepository.save(mapToExistionEntity);
+
+        return deviceMapper.toResponse(save);
     }
 
     @Override
     public void notify(Long deviceId, EventDto eventDto) {
+        Device device = deviceRepository.findById(deviceId);
+        if (device == null) {
+            throw new DeviceNotFoundException(HttpStatus.NOT_FOUND);
+        }
 
+        if (eventDto instanceof WindEvent) {
+            device.setState(DeviceState.WINDOWS_CLOSED);
+            deviceRepository.save(device);
+        }
     }
 
     @Override
     public void createDevice(DeviceRequestDto deviceDto) {
-
+        Device device = deviceMapper.toEntity(deviceDto);
+        Device save = deviceRepository.save(device);
     }
 
     @Override
     public void deleteDevice(Long deviceId) {
-
+        if (!deviceRepository.existsById(deviceId)){
+            throw new DeviceNotFoundException(HttpStatus.NOT_FOUND);
+        }
+        deviceRepository.deleteById(deviceId);
     }
 }

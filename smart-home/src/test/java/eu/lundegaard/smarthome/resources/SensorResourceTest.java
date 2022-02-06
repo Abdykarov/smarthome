@@ -48,20 +48,20 @@ public class SensorResourceTest {
 
     @Test
     void reactToExternalEvent() throws Exception {
-        mockMvc.perform(patch("/api/sensors/1/Hall/BREAK_IN"))
+        mockMvc.perform(patch("/api/sensors/Hall/STRONG_WIND"))
                 .andExpect(status().isOk());
 
-        verify(sensorService).reactToExternalEvent(1l, "Hall", EventType.BREAK_IN);
+        verify(sensorService).reactToExternalEvent( "Hall", EventType.STRONG_WIND);
     }
 
     @Test
     void reactToExternalEvent_RoomOrSensorNotFound() throws Exception {
-        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).reactToExternalEvent(1l, "Hall", EventType.BREAK_IN);
+        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).reactToExternalEvent( "Hall", EventType.STRONG_WIND);
 
-        mockMvc.perform(patch("/api/sensors/1/Hall/BREAK_IN"))
+        mockMvc.perform(patch("/api/sensors/Hall/STRONG_WIND"))
                 .andExpect(status().isNotFound());
 
-        verify(sensorService).reactToExternalEvent(1l, "Hall", EventType.BREAK_IN);
+        verify(sensorService).reactToExternalEvent( "Hall", EventType.STRONG_WIND);
     }
 
     @Test

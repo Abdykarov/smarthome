@@ -6,40 +6,16 @@ package eu.lundegaard.smarthome.events;
 public enum EventType implements EventStringOperation{
 
     STRONG_WIND {
+        private WindEvent instance;
+
         @Override
-        public String returnEvent(){
-            return "Wind started, windows are closing";
+        public WindEvent returnEvent(){
+            if(instance == null){
+                this.instance = new WindEvent();
+                return this.instance;
+            }
+            return this.instance;
         }
-    },
-    BREAK_IN {
-        @Override
-        public String returnEvent(){
-            return "Somebody wants to break in house, police was called and smart doors were locked";
-        }
-    },
-    FLOOD {
-        @Override
-        public String returnEvent(){
-            return "Water has been detected, alarm has been sent to the control panel";
-        }
-    },
-    GAS {
-        @Override
-        public String returnEvent(){
-            return "Gas has been leaked, turning off the electricity in the house";
-        }
-    },
-    FIRE {
-        @Override
-        public String returnEvent(){
-            return "Fire started in house, the alarm is on and firefighters are called";
-        }
-    },
-    SNOW {
-        @Override
-        public String returnEvent(){
-            return "Snow started, electric furnace started working";
-        }
-    };
+    }
 
 }

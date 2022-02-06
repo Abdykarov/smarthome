@@ -2,6 +2,7 @@ package eu.lundegaard.smarthome.resources;
 
 import eu.lundegaard.smarthome.dto.response.DeviceResponseDto;
 import eu.lundegaard.smarthome.dto.request.SensorRequestDto;
+import eu.lundegaard.smarthome.dto.response.SensorResponseDto;
 import eu.lundegaard.smarthome.model.sensor.SensorState;
 import eu.lundegaard.smarthome.events.EventType;
 import eu.lundegaard.smarthome.service.SensorService;
@@ -32,9 +33,9 @@ public class SensorResource {
             @ApiResponse(responseCode = "200", description = "Attached devices has been notified"),
             @ApiResponse(responseCode = "404", description = "Sensor or room not found")
     })
-    @PatchMapping("{sensorId}/{room}/{eventType}")
-    public void reactToExternalEvent(@PathVariable Long sensorId, @PathVariable String room, @PathVariable EventType eventType){
-        sensorService.reactToExternalEvent(sensorId, room, eventType);
+    @PatchMapping("{room}/{eventType}")
+    public void reactToExternalEvent(@PathVariable String room, @PathVariable EventType eventType){
+        sensorService.reactToExternalEvent(room, eventType);
     }
 
     @Operation(
@@ -46,8 +47,8 @@ public class SensorResource {
             @ApiResponse(responseCode = "404", description = "Sensor not found")
     })
     @PatchMapping("{sensorId}/{state}")
-    public void changeSensorState(@PathVariable Long sensorId, @PathVariable SensorState state){
-        sensorService.changeSensorState(sensorId, state);
+    public SensorResponseDto changeSensorState(@PathVariable Long sensorId, @PathVariable SensorState state){
+        return sensorService.changeSensorState(sensorId, state);
     }
 
     @Operation(

@@ -18,4 +18,6 @@ public interface DeviceRepository {
     Device update(Device device);
 
     void deleteById(Long deviceId);
+
+    boolean existsById(Long deviceId);
 }
