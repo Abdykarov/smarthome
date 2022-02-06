@@ -16,6 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
@@ -25,16 +28,16 @@ import static org.mockito.Mockito.*;
 /**
  * @author Ilias Abdykarov, ilias.abdykarov@lundegaard.eu 2/1/2022 5:03 PM
  */
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class DeviceServiceImplTest implements WithAssertions {
 
-    @Mock
+    @MockBean
     private DeviceMapper deviceMapper;
 
-    @Mock
+    @MockBean
     private DeviceRepository deviceRepository;
 
-    @InjectMocks
+    @Autowired
     private DeviceServiceImpl deviceService;
 
     @Test
@@ -62,7 +65,11 @@ class DeviceServiceImplTest implements WithAssertions {
 
         when(deviceRepository.findById(1L)).thenReturn(device);
         when(deviceRepository.save(device)).thenReturn(device);
-        when(deviceMapper.toResponse(device)).then(a -> new DeviceMapperImpl().toResponse(a.getArgument(0)));
+        when(deviceMapper.toResponse(device)).then(a -> {
+            DeviceResponseDto deviceResponseDto = new DeviceMapperImpl().toResponse(a.getArgument(0));
+            return deviceResponseDto;
+            
+        });
 
         DeviceResponseDto responseDto = deviceService.changeDeviceState(1L, DeviceState.ACTIVE);
 
