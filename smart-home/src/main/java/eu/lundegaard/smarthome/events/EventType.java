@@ -3,7 +3,7 @@ package eu.lundegaard.smarthome.events;
 /**
  * @author Ilias Abdykarov
  */
-public enum EventType implements EventStringOperation{
+public enum EventType implements EventStringOperation {
 
     STRONG_WIND {
         private WindEvent instance;
