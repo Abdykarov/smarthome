@@ -24,6 +24,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -42,6 +44,9 @@ class DeviceServiceImplTest implements WithAssertions {
 
     @Autowired
     private DeviceServiceImpl deviceService;
+
+    private final UUID uuid = UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b327");
+
 
     @Test
     void findAllDevices() {
@@ -64,11 +69,11 @@ class DeviceServiceImplTest implements WithAssertions {
 
     @Test
     void changeDeviceState() {
-        Device device = new Device()
-                .setId(1L)
-                .setState(DeviceState.IDLE);
+        Device device = (Device) new Device()
+                .setState(DeviceState.ACTIVE)
+                .setId(uuid);
 
-        when(deviceRepository.findById(1L)).thenReturn(device);
+        when(deviceRepository.findById(uuid)).thenReturn(Optional.ofNullable(device));
         when(deviceRepository.save(device)).thenReturn(device);
         when(deviceMapper.toResponse(device)).then(a -> {
             DeviceResponseDto deviceResponseDto = new DeviceMapperImpl().toResponse(a.getArgument(0));
@@ -76,7 +81,7 @@ class DeviceServiceImplTest implements WithAssertions {
 
         });
 
-        DeviceResponseDto responseDto = deviceService.changeDeviceState(1L, DeviceState.ACTIVE);
+        DeviceResponseDto responseDto = deviceService.changeDeviceState(uuid, DeviceState.ACTIVE);
 
         assertThat(responseDto.getState()).isEqualTo(DeviceState.ACTIVE);
 
@@ -90,26 +95,26 @@ class DeviceServiceImplTest implements WithAssertions {
                 .setDeviceName("TV")
                 .setConsumedPower(100);
 
-        Device device = new Device()
-                .setId(1L)
+        Device device = (Device) new Device()
                 .setConsumedPower(89)
-                .setDeviceName("Smart Doors");
+                .setDeviceName("Smart Doors")
+                .setId(uuid);
 
-        Device updatedDevice = new Device()
-                .setId(1L)
+        Device updatedDevice = (Device) new Device()
                 .setConsumedPower(100)
-                .setDeviceName("TV");
+                .setDeviceName("TV")
+                .setId(uuid);
 
         DeviceResponseDto responseDto = new DeviceResponseDto()
                 .setDeviceName("TV")
                 .setConsumedPower(100);
 
-        when(deviceRepository.findById(1L)).thenReturn(device);
+        when(deviceRepository.findById(uuid)).thenReturn(Optional.ofNullable(device));
         when(deviceMapper.mapToExistionEntity(device, deviceRequestDto)).thenReturn(updatedDevice);
         when(deviceRepository.save(updatedDevice)).thenReturn(updatedDevice);
         when(deviceMapper.toResponse(updatedDevice)).thenReturn(responseDto);
 
-        DeviceResponseDto deviceResponseDto = deviceService.updateDevice(1L, deviceRequestDto);
+        DeviceResponseDto deviceResponseDto = deviceService.updateDevice(uuid, deviceRequestDto);
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(deviceResponseDto.getDeviceName()).isEqualTo("TV");
@@ -129,12 +134,12 @@ class DeviceServiceImplTest implements WithAssertions {
                 .setDeviceName("Smart Windows");
         Device updatedDevice = device.setState(DeviceState.WINDOWS_CLOSED);
 
-        when(deviceRepository.findById(1L)).thenReturn(device);
+        when(deviceRepository.findById(uuid)).thenReturn(Optional.of(device));
         when(deviceRepository.save(updatedDevice)).thenReturn(updatedDevice);
 
-        deviceService.notify(1L, windEvent);
+        deviceService.notify(uuid, windEvent);
 
-        verify(deviceRepository).findById(1L);
+        verify(deviceRepository).findById(uuid);
         verify(deviceRepository).save(updatedDevice);
     }
 
@@ -145,10 +150,11 @@ class DeviceServiceImplTest implements WithAssertions {
                 .setDeviceName("TV")
                 .setRoom("Gaming room");
 
-        Device device = new Device()
+        Device device = (Device) new Device()
                 .setDeviceName("TV")
-                        .setId(1L)
-                                .setRoom("Gaming room");
+                .setRoom("Gaming room")
+                .setId(uuid);
+
         when(deviceMapper.toEntity(deviceRequestDto)).thenReturn(device);
         when(deviceRepository.save(device)).thenReturn(device);
 
@@ -160,20 +166,21 @@ class DeviceServiceImplTest implements WithAssertions {
 
     @Test
     void deleteDevice() {
-        doNothing().when(deviceRepository).deleteById(1L);
+        doNothing().when(deviceRepository).deleteById(uuid);
+        when(deviceRepository.existsById(uuid)).thenReturn(true);
 
-        deviceService.deleteDevice(1L);
+        deviceService.deleteDevice(uuid);
 
-        verify(deviceRepository).deleteById(1L);
+        verify(deviceRepository).deleteById(uuid);
     }
 
     @Test
     void deleteDevice_NotFound() {
-        when(deviceRepository.existsById(1L)).thenReturn(false);
+        when(deviceRepository.existsById(uuid)).thenReturn(false);
 
         final DeviceNotFoundException deviceNotFoundException = assertThrows(DeviceNotFoundException.class,
-                () -> deviceService.deleteDevice(1L));
+                () -> deviceService.deleteDevice(uuid));
 
-        verify(deviceRepository).existsById(1L);
+        verify(deviceRepository).existsById(uuid);
     }
 }

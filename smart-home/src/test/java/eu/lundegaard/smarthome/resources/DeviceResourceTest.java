@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -49,6 +50,8 @@ class DeviceResourceTest implements WithAssertions {
     @MockBean
     private DeviceService deviceService;
 
+    private final UUID uuid = UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b327");
+
     @Test
     void findAll_ReturnsAll() throws Exception {
         when(deviceService.findAllDevices()).thenReturn(List.of(new DeviceResponseDto()));
@@ -62,7 +65,7 @@ class DeviceResourceTest implements WithAssertions {
 
     @Test
     void changeState_Success() throws Exception {
-        mockMvc.perform(patch("/api/devices/1/IDLE"))
+        mockMvc.perform(patch("/api/devices/{id}/IDLE", uuid))
                 .andExpect(status().isOk());
         deviceCaptor = ArgumentCaptor.forClass(DeviceState.class);
         verify(deviceService).changeDeviceState(any(), deviceCaptor.capture());
@@ -72,26 +75,26 @@ class DeviceResourceTest implements WithAssertions {
 
     @Test
     void changeState_DeviceNotFound() throws Exception {
-        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).changeDeviceState(1l, DeviceState.IDLE);
+        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).changeDeviceState(uuid, DeviceState.IDLE);
 
-        mockMvc.perform(patch("/api/devices/1/IDLE"))
+        mockMvc.perform(patch("/api/devices/{id}/IDLE", uuid))
                 .andExpect(status().isNotFound());
 
-        verify(deviceService).changeDeviceState(1l, DeviceState.IDLE);
+        verify(deviceService).changeDeviceState(uuid, DeviceState.IDLE);
     }
 
     @Test
     void updateDevice_Success() throws Exception {
         DeviceRequestDto mockRequestDto = createMockRequestDto();
         DeviceResponseDto mockResponseDto = createMockResponseDto();
-        when(deviceService.updateDevice(1l, mockRequestDto)).thenReturn(mockResponseDto);
+        when(deviceService.updateDevice(uuid, mockRequestDto)).thenReturn(mockResponseDto);
 
-        mockMvc.perform(put("/api/devices/1")
+        mockMvc.perform(put("/api/devices/{id}", uuid)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createJson(mockRequestDto)))
                 .andExpect(status().isOk());
 
-        verify(deviceService).updateDevice(1L,mockRequestDto);
+        verify(deviceService).updateDevice(uuid,mockRequestDto);
         SoftAssertions.assertSoftly(softAssertions -> {
             assertThat(mockRequestDto.getDeviceName()).isEqualTo(mockResponseDto.getDeviceName());
             assertThat(mockResponseDto.getState()).isEqualTo(DeviceState.ACTIVE);
@@ -103,7 +106,7 @@ class DeviceResourceTest implements WithAssertions {
         DeviceRequestDto mockRequestDto = createMockRequestDto()
                 .setDeviceName("");
 
-        mockMvc.perform(put("/api/devices/1")
+        mockMvc.perform(put("/api/devices/{id}", uuid)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createJson(mockRequestDto)))
                 .andExpect(status().isBadRequest());
@@ -114,39 +117,39 @@ class DeviceResourceTest implements WithAssertions {
     @Test
     void updateDevice_DeviceNotFound() throws Exception {
         DeviceRequestDto mockRequestDto = createMockRequestDto();
-        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).updateDevice(1l, mockRequestDto);
+        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).updateDevice(uuid, mockRequestDto);
 
-        mockMvc.perform(put("/api/devices/1")
+        mockMvc.perform(put("/api/devices/{id}", uuid)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createJson(mockRequestDto)))
                 .andExpect(status().isNotFound());
 
-        verify(deviceService).updateDevice(1l, mockRequestDto);
+        verify(deviceService).updateDevice(uuid, mockRequestDto);
     }
 
     @Test
     void notifyDevice_EventDtoPassing() throws Exception {
         WindEvent windEvent = new WindEvent();
 
-        mockMvc.perform(post("/api/devices/1/notify")
+        mockMvc.perform(post("/api/devices/{id}/notify", uuid)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createJson(windEvent)))
                 .andExpect(status().isOk());
 
-        verify(deviceService).notify(1L, windEvent);
+        verify(deviceService).notify(uuid, windEvent);
     }
 
     @Test
     void notifyDevice_DeviceNotFound() throws Exception {
         WindEvent windEvent = new WindEvent();
-        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).notify(1l, windEvent);
+        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).notify(UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32be77"), windEvent);
 
-        mockMvc.perform(post("/api/devices/1/notify")
+        mockMvc.perform(post("/api/devices/{id}/notify", UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32be77"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createJson(windEvent)))
                 .andExpect(status().isNotFound());
 
-        verify(deviceService).notify(1l, windEvent);
+        verify(deviceService).notify(uuid, windEvent);
     }
 
     @Test
@@ -163,20 +166,20 @@ class DeviceResourceTest implements WithAssertions {
 
     @Test
     void deleteDevice_DeletedDevice() throws Exception {
-        mockMvc.perform(delete("/api/devices/1"))
+        mockMvc.perform(delete("/api/devices/{id}", uuid))
                 .andExpect(status().isOk());
 
-        verify(deviceService).deleteDevice(1l);
+        verify(deviceService).deleteDevice(uuid);
     }
 
     @Test
     void deleteDevice_NotFound() throws Exception{
-        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).deleteDevice(1l);
+        doThrow(new DeviceNotFoundException(HttpStatus.NOT_FOUND)).when(deviceService).deleteDevice(uuid);
 
-        mockMvc.perform(delete("/api/devices/1"))
+        mockMvc.perform(delete("/api/devices/{id}", uuid))
                 .andExpect(status().isNotFound());
 
-        verify(deviceService).deleteDevice(1l);
+        verify(deviceService).deleteDevice(uuid);
     }
 
     private DeviceRequestDto createMockRequestDto(){

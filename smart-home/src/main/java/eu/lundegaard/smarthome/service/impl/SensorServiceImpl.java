@@ -17,8 +17,10 @@ import eu.lundegaard.smarthome.service.SensorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Ilias Abdykarov, ilias.abdykarov@lundegaard.eu 1/31/2022 2:33 AM
@@ -35,6 +37,7 @@ public class SensorServiceImpl implements SensorService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public void reactToExternalEvent(String room, EventType eventType) {
         List<Sensor> allByRoom = sensorRepository.findAllByRoom(room);
         for (Sensor sensor : allByRoom) {
@@ -45,11 +48,11 @@ public class SensorServiceImpl implements SensorService {
     }
 
     @Override
-    public SensorResponseDto changeSensorState(Long sensorId, SensorState state) {
-        Sensor byId = sensorRepository.findById(sensorId);
-        if (byId == null) {
-            throw new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND);
-        }
+    @Transactional
+    public SensorResponseDto changeSensorState(UUID sensorId, SensorState state) {
+        Sensor byId = sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND));
+
         byId.setSensorState(state);
         Sensor save = sensorRepository.save(byId);
         SensorResponseDto sensorResponseDto = sensorMapper.toResponse(save);
@@ -58,17 +61,17 @@ public class SensorServiceImpl implements SensorService {
     }
 
     @Override
-    public void createSensor(SensorRequestDto sensorRequestDto) {
+    @Transactional
+    public UUID createSensor(SensorRequestDto sensorRequestDto) {
         Sensor sensor = sensorMapper.toEntity(sensorRequestDto);
-        sensorRepository.save(sensor);
+        Sensor save = sensorRepository.save(sensor);
+        return save.getId();
     }
 
     @Override
-    public List<DeviceResponseDto> getObservers(Long sensorId) {
-        Sensor byId = sensorRepository.findById(sensorId);
-        if (byId == null) {
-            throw new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND);
-        }
+    public List<DeviceResponseDto> getObservers(UUID sensorId) {
+        Sensor byId = sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND));
         List<Device> connectedDevices = byId.getConnectedDevices();
         return connectedDevices.stream()
                 .map(d -> deviceMapper.toResponse(d))
@@ -76,29 +79,24 @@ public class SensorServiceImpl implements SensorService {
     }
 
     @Override
-    public void attachSubscriber(Long sensorId, Long listenerId) {
-        Sensor byId = sensorRepository.findById(sensorId);
-        if (byId == null) {
-            throw new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND);
-        }
-        Device device = deviceRepository.findById(listenerId);
-        if (device == null) {
-            throw new DeviceNotFoundException(HttpStatus.NOT_FOUND);
-        }
+    public void attachSubscriber(UUID sensorId, UUID listenerId) {
+        Sensor byId = sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND));
+
+        Device device = deviceRepository.findById(listenerId)
+                .orElseThrow(() -> new DeviceNotFoundException(HttpStatus.NOT_FOUND));
+
         byId.getConnectedDevices().add(device);
         sensorRepository.save(byId);
     }
 
     @Override
-    public void detachSubscriber(Long sensorId, Long listenerId) {
-        Sensor byId = sensorRepository.findById(sensorId);
-        if (byId == null) {
-            throw new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND);
-        }
-        Device device = deviceRepository.findById(listenerId);
-        if (device == null) {
-            throw new DeviceNotFoundException(HttpStatus.NOT_FOUND);
-        }
+    @Transactional
+    public void detachSubscriber(UUID sensorId, UUID listenerId) {
+        Sensor byId = sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND));
+        Device device = deviceRepository.findById(listenerId)
+                .orElseThrow(() -> new DeviceNotFoundException(HttpStatus.NOT_FOUND));
         byId.getConnectedDevices().remove(device);
         sensorRepository.save(byId);
     }

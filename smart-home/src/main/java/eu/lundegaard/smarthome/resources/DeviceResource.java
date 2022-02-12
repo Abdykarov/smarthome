@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Ilias Abdykarov
@@ -49,7 +50,7 @@ public class DeviceResource {
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
     @PatchMapping("{deviceId}/{deviceState}")
-    public DeviceResponseDto changeState(@PathVariable Long deviceId, @PathVariable DeviceState deviceState){
+    public DeviceResponseDto changeState(@PathVariable UUID deviceId, @PathVariable DeviceState deviceState){
         return deviceService.changeDeviceState(deviceId, deviceState);
     }
 
@@ -63,7 +64,7 @@ public class DeviceResource {
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
     @PutMapping(value = "{deviceId}")
-    public DeviceResponseDto updateDevice(@PathVariable Long deviceId, @Valid @RequestBody DeviceRequestDto deviceDto){
+    public DeviceResponseDto updateDevice(@PathVariable UUID deviceId, @Valid @RequestBody DeviceRequestDto deviceDto){
         return deviceService.updateDevice(deviceId, deviceDto);
     }
 
@@ -76,8 +77,7 @@ public class DeviceResource {
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
     @PostMapping("{deviceId}/notify")
-    @ResponseStatus(code = HttpStatus.OK)
-    public void notify(@PathVariable Long deviceId, @RequestBody EventDto eventDto){
+    public void notify(@PathVariable UUID deviceId, @RequestBody EventDto eventDto){
         deviceService.notify(deviceId, eventDto);
     }
 
@@ -104,7 +104,7 @@ public class DeviceResource {
             @ApiResponse(responseCode = "404", description = "Device not found")
     })
     @DeleteMapping("{deviceId}")
-    public void deleteDevice(@PathVariable Long deviceId){
+    public void deleteDevice(@PathVariable UUID deviceId){
         deviceService.deleteDevice(deviceId);
     }
 

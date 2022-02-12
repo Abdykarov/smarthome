@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Ilias Abdykarov
@@ -47,7 +48,7 @@ public class SensorResource {
             @ApiResponse(responseCode = "404", description = "Sensor not found")
     })
     @PatchMapping("{sensorId}/{state}")
-    public SensorResponseDto changeSensorState(@PathVariable Long sensorId, @PathVariable SensorState state){
+    public SensorResponseDto changeSensorState(@PathVariable UUID sensorId, @PathVariable SensorState state){
         return sensorService.changeSensorState(sensorId, state);
     }
 
@@ -74,7 +75,7 @@ public class SensorResource {
             @ApiResponse(responseCode = "404", description = "Sensor not found")
     })
     @GetMapping("{sensorId}/listeners")
-    public List<DeviceResponseDto> getObservers(@PathVariable Long sensorId){
+    public List<DeviceResponseDto> getObservers(@PathVariable UUID sensorId){
         return sensorService.getObservers(sensorId);
     }
 
@@ -89,7 +90,7 @@ public class SensorResource {
             @ApiResponse(responseCode = "404", description = "Sensor not found")
     })
     @PutMapping("{sensorId}/listeners/{listenerId}")
-    public void attachSubscriber(@PathVariable Long sensorId, @PathVariable Long listenerId) {
+    public void attachSubscriber(@PathVariable UUID sensorId, @PathVariable UUID listenerId) {
         sensorService.attachSubscriber(sensorId, listenerId);
     }
 
@@ -102,7 +103,7 @@ public class SensorResource {
             @ApiResponse(responseCode = "404", description = "Sensor not found")
     })
     @DeleteMapping("{sensorId}/listeners/{listenerId}")
-    public void detachSubscriber(@PathVariable Long sensorId, @PathVariable Long listenerId) {
+    public void detachSubscriber(@PathVariable UUID sensorId, @PathVariable UUID listenerId) {
         sensorService.detachSubscriber(sensorId, listenerId);
     }
 

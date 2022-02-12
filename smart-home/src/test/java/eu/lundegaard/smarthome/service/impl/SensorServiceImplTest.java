@@ -22,9 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -50,12 +48,17 @@ class SensorServiceImplTest implements WithAssertions {
     @Autowired
     private SensorServiceImpl sensorService;
 
+    private final UUID uuid = UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b327");
+
     @Test
     void reactToExternalEvent() {
-        Sensor sensor = new Sensor()
-                .setRoom("Hall")
-                .setSensorType(SensorType.WIND_SENSOR)
-                .setConnectedDevices(Arrays.asList(new Device().setId(1L).setDeviceName("Smart Windows")));
+        Sensor sensor = new Sensor();
+        sensor.setRoom("Hall");
+        sensor.setSensorType(SensorType.WIND_SENSOR);
+        sensor.setConnectedDevices(Arrays.asList((Device) new Device()
+                        .setDeviceName("Smart Windows")
+                        .setId(uuid))
+        );
         List<Sensor> sensors = Arrays.asList(sensor);
 
         when(sensorRepository.findAllByRoom("Hall"))
@@ -65,7 +68,7 @@ class SensorServiceImplTest implements WithAssertions {
         EventDto eventDto = strongWind.returnEvent();
         sensorService.reactToExternalEvent("Hall", strongWind);
 
-        verify(deviceService).notify(1L, eventDto);
+        verify(deviceService).notify(uuid, eventDto);
         verify(sensorRepository).findAllByRoom("Hall");
     }
 
@@ -75,17 +78,17 @@ class SensorServiceImplTest implements WithAssertions {
                 .setRoom("Hall")
                 .setSensorState(SensorState.BROKEN)
                 .setSensorType(SensorType.WIND_SENSOR)
-                .setConnectedDevices(Arrays.asList(new Device().setId(1L).setDeviceName("Smart Windows")));
+                .setConnectedDevices(Arrays.asList((Device) new Device().setDeviceName("Smart Windows").setId(uuid)));
         SensorResponseDto responseDto = new SensorResponseDto().setSensorState(SensorState.ACTIVE);
         Sensor updatedSensor = sensor.setSensorState(SensorState.ACTIVE);
 
-        when(sensorRepository.findById(1L)).thenReturn(sensor);
+        when(sensorRepository.findById(uuid)).thenReturn(Optional.of(sensor));
         when(sensorRepository.save(updatedSensor)).thenReturn(updatedSensor);
         when(sensorMapper.toResponse(updatedSensor)).thenReturn(responseDto);
 
-        SensorResponseDto sensorResponseDto = sensorService.changeSensorState(1L, SensorState.ACTIVE);
+        SensorResponseDto sensorResponseDto = sensorService.changeSensorState(uuid, SensorState.ACTIVE);
 
-        verify(sensorRepository).findById(1L);
+        verify(sensorRepository).findById(uuid);
 
         assertThat(sensorResponseDto.getSensorState()).isEqualTo(SensorState.ACTIVE);
     }
@@ -110,10 +113,10 @@ class SensorServiceImplTest implements WithAssertions {
         Sensor tv = new Sensor().setConnectedDevices(Arrays.asList(device));
         DeviceResponseDto deviceResponseDto = new DeviceResponseDto().setDeviceName("TV");
 
-        when(sensorRepository.findById(1L)).thenReturn(tv);
+        when(sensorRepository.findById(uuid)).thenReturn(Optional.ofNullable(tv));
         when(deviceMapper.toResponse(device)).thenReturn(deviceResponseDto);
 
-        List<DeviceResponseDto> observers = sensorService.getObservers(1L);
+        List<DeviceResponseDto> observers = sensorService.getObservers(uuid);
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(observers.size()).isEqualTo(1);
@@ -121,13 +124,4 @@ class SensorServiceImplTest implements WithAssertions {
         });
     }
 
-    @Test
-    void attachSubscriber() {
-        // Simple test, this time i decided to write just service implementation without test
-    }
-
-    @Test
-    void detachSubscriber() {
-        // Simple test, this time i decided to write just service implementation without test
-    }
 }

@@ -2,23 +2,16 @@ package eu.lundegaard.smarthome.repository;
 
 import eu.lundegaard.smarthome.model.device.Device;
 import eu.lundegaard.smarthome.model.sensor.Sensor;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Ilias Abdykarov, ilias.abdykarov@lundegaard.eu 2/1/2022 3:59 PM
  */
-public interface SensorRepository {
+public interface SensorRepository extends CrudRepository<Sensor, UUID> {
 
-    List<Sensor> findAll();
-
-    Sensor findById(Long sensorId);
-
-    Sensor save(Sensor sensor);
-
-    Sensor update(Sensor sensor);
-
-    void deleteById(Long sensorId);
-
-    List<Sensor> findAllByRoom(String hall);
+    // complex
+    List<Sensor> findAllByRoom(String room);
 }

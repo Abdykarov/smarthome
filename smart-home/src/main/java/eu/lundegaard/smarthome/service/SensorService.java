@@ -7,6 +7,7 @@ import eu.lundegaard.smarthome.events.EventType;
 import eu.lundegaard.smarthome.model.sensor.SensorState;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Ilias Abdykarov
@@ -25,32 +26,32 @@ public interface SensorService {
      * @param sensorId - id of sensor
      * @param state - new state to set
      */
-    SensorResponseDto changeSensorState(Long sensorId, SensorState state);
+    SensorResponseDto changeSensorState(UUID sensorId, SensorState state);
 
     /**
      * Method creates a new sensor
      * @param sensorRequestDto - returned sensor dto
      */
-    void createSensor(SensorRequestDto sensorRequestDto);
+    UUID createSensor(SensorRequestDto sensorRequestDto);
 
     /**
      * Method returns all installed devices
      * @param sensorId - id of sensor
      * @return a list of device response dtos
      */
-    List<DeviceResponseDto> getObservers(Long sensorId);
+    List<DeviceResponseDto> getObservers(UUID sensorId);
 
     /**
      * Method attaches device to the sensor
      * @param sensorId - id of sensor
      * @param listenerId - id of device
      */
-    void attachSubscriber(Long sensorId, Long listenerId);
+    void attachSubscriber(UUID sensorId, UUID listenerId);
 
     /**
      * Method detaches an installed device from sensor
      * @param sensorId - id of sensor
      * @param listenerId - id of device
      */
-    void detachSubscriber(Long sensorId, Long listenerId);
+    void detachSubscriber(UUID sensorId, UUID listenerId);
 }

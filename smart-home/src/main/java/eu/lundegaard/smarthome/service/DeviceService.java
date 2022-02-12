@@ -6,6 +6,7 @@ import eu.lundegaard.smarthome.events.EventDto;
 import eu.lundegaard.smarthome.model.device.DeviceState;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Ilias Abdykarov
@@ -24,7 +25,7 @@ public interface DeviceService {
      * @param deviceState a new state to set
      * @return a device response dto
      */
-    DeviceResponseDto changeDeviceState(Long deviceId, DeviceState deviceState);
+    DeviceResponseDto changeDeviceState(UUID deviceId, DeviceState deviceState);
 
     /**
      * Updates device, if new data are provided
@@ -32,24 +33,25 @@ public interface DeviceService {
      * @param deviceDto - provided device data
      * @return a device response dto
      */
-    DeviceResponseDto updateDevice(Long deviceId, DeviceRequestDto deviceDto);
+    DeviceResponseDto updateDevice(UUID deviceId, DeviceRequestDto deviceDto);
 
     /**
      * Methods notifies device to do some action depending on event
      * @param deviceId - id of device
      * @param eventDto - provided event dto ( event dto may have daughter classes )
      */
-    void notify(Long deviceId, EventDto eventDto);
+    void notify(UUID deviceId, EventDto eventDto);
 
     /**
      * Method creates a new device in house
      * @param deviceDto - provided device data
+     * @return
      */
-    void createDevice(DeviceRequestDto deviceDto);
+    UUID createDevice(DeviceRequestDto deviceDto);
 
     /**
      * Method deletes device by id
      * @param deviceId - id of device
      */
-    void deleteDevice(Long deviceId);
+    void deleteDevice(UUID deviceId);
 }

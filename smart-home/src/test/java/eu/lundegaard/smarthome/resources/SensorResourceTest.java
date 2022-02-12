@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,6 +47,9 @@ public class SensorResourceTest {
     @MockBean
     private SensorService sensorService;
 
+    private final UUID uuid = UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b327");
+    private final UUID uuid2 = UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b328");
+
     @Test
     void reactToExternalEvent() throws Exception {
         mockMvc.perform(patch("/api/sensors/Hall/STRONG_WIND"))
@@ -66,20 +70,20 @@ public class SensorResourceTest {
 
     @Test
     void changeSensorState() throws Exception {
-        mockMvc.perform(patch("/api/sensors/1/ACTIVE"))
+        mockMvc.perform(patch("/api/sensors/{id}/ACTIVE", uuid))
                 .andExpect(status().isOk());
 
-        verify(sensorService).changeSensorState(1L, SensorState.ACTIVE);
+        verify(sensorService).changeSensorState(uuid, SensorState.ACTIVE);
     }
 
     @Test
     void changeSensorState_NotFoundSensor() throws Exception {
-        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).changeSensorState(1L, SensorState.ACTIVE);
+        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).changeSensorState(UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b327"), SensorState.ACTIVE);
 
-        mockMvc.perform(patch("/api/sensors/1/ACTIVE"))
+        mockMvc.perform(patch("/api/sensors/{id}/ACTIVE", UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b327")))
                 .andExpect(status().isNotFound());
 
-        verify(sensorService).changeSensorState(1L, SensorState.ACTIVE);
+        verify(sensorService).changeSensorState(UUID.fromString("42f5ddca-9ede-4265-a0d1-38433b32b327"), SensorState.ACTIVE);
     }
 
     @Test
@@ -109,69 +113,69 @@ public class SensorResourceTest {
 
     @Test
     void getObservers_Success() throws Exception {
-        when(sensorService.getObservers(1L)).thenReturn(List.of(new DeviceResponseDto()));
+        when(sensorService.getObservers(uuid)).thenReturn(List.of(new DeviceResponseDto()));
 
-        mockMvc.perform(get("/api/sensors/1/listeners"))
+        mockMvc.perform(get("/api/sensors/{id}/listeners", uuid))
                 .andExpect(status().isOk());
 
-        verify(sensorService).getObservers(1L);
+        verify(sensorService).getObservers(uuid);
     }
 
     @Test
     void attachSubscriber_Attached() throws Exception {
 
-        mockMvc.perform(put("/api/sensors/1/listeners/2"))
+        mockMvc.perform(put("/api/sensors/{uuid}/listeners/{uuid2}", uuid, uuid2))
                 .andExpect(status().isOk());
 
-        verify(sensorService).attachSubscriber(1L, 2L);
+        verify(sensorService).attachSubscriber(uuid, uuid2);
     }
 
     @Test
     void attachSubscriber_DeviceInUse() throws Exception {
-        doThrow(new DeviceInUseByAnotherSensor(HttpStatus.CONFLICT)).when(sensorService).attachSubscriber(1L, 1L);
+        doThrow(new DeviceInUseByAnotherSensor(HttpStatus.CONFLICT)).when(sensorService).attachSubscriber(uuid, uuid2);
 
-        mockMvc.perform(put("/api/sensors/1/listeners/1"))
+        mockMvc.perform(put("/api/sensors/{id}/listeners/{id2}", uuid, uuid2))
                 .andExpect(status().isConflict());
 
-        verify(sensorService).attachSubscriber(1L, 1L);
+        verify(sensorService).attachSubscriber(uuid, uuid2);
     }
 
     @Test
     void attachSubscriber_DifferentRooms() throws Exception {
-        doThrow(new DifferentRoomsException(HttpStatus.FORBIDDEN)).when(sensorService).attachSubscriber(1L, 1L);
+        doThrow(new DifferentRoomsException(HttpStatus.FORBIDDEN)).when(sensorService).attachSubscriber(uuid, uuid2);
 
-        mockMvc.perform(put("/api/sensors/1/listeners/1"))
+        mockMvc.perform(put("/api/sensors/{id}/listeners/{id2}", uuid, uuid2))
                 .andExpect(status().isForbidden());
 
-        verify(sensorService).attachSubscriber(1L, 1L);
+        verify(sensorService).attachSubscriber(uuid, uuid2);
     }
 
     @Test
     void attachSubscriber_NotFoundSensor() throws Exception {
-        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).attachSubscriber(1L, 1L);
+        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).attachSubscriber(uuid, uuid2);
 
-        mockMvc.perform(put("/api/sensors/1/listeners/1"))
+        mockMvc.perform(put("/api/sensors/{id}/listeners/{id2}", uuid, uuid2))
                 .andExpect(status().isNotFound());
 
-        verify(sensorService).attachSubscriber(1L, 1L);
+        verify(sensorService).attachSubscriber(uuid, uuid2);
     }
 
     @Test
     void detachSubscriber_Success() throws Exception {
-        mockMvc.perform(delete("/api/sensors/1/listeners/1"))
+        mockMvc.perform(delete("/api/sensors/{id}/listeners/{id2}", uuid, uuid2))
                 .andExpect(status().isOk());
 
-        verify(sensorService).detachSubscriber(1L, 1L);
+        verify(sensorService).detachSubscriber(uuid, uuid2);
     }
 
     @Test
     void detachSubscriber_SensorNotFound() throws Exception {
-        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).detachSubscriber(1L, 1L);
+        doThrow(new SensorOrRoomNotFoundException(HttpStatus.NOT_FOUND)).when(sensorService).detachSubscriber(uuid, uuid2);
 
-        mockMvc.perform(delete("/api/sensors/1/listeners/1"))
+        mockMvc.perform(delete("/api/sensors/{id}/listeners/{id2}", uuid, uuid2))
                 .andExpect(status().isNotFound());
 
-        verify(sensorService).detachSubscriber(1L, 1L);
+        verify(sensorService).detachSubscriber(uuid, uuid2);
     }
 
     private SensorRequestDto createMockRequestDto(){
