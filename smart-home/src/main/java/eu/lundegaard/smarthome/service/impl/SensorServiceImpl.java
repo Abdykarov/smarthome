@@ -39,7 +39,7 @@ public class SensorServiceImpl implements SensorService {
     @Override
     @Transactional(readOnly = true)
     public void reactToExternalEvent(String room, EventType eventType) {
-        List<Sensor> allByRoom = sensorRepository.findAllByRoom(room);
+        List<Sensor> allByRoom = sensorRepository.findByRoom(room);
         for (Sensor sensor : allByRoom) {
             for (Device device : sensor.getConnectedDevices()) {
                 deviceService.notify(device.getId(), eventType.returnEvent());

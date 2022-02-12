@@ -61,7 +61,7 @@ class SensorServiceImplTest implements WithAssertions {
         );
         List<Sensor> sensors = Arrays.asList(sensor);
 
-        when(sensorRepository.findAllByRoom("Hall"))
+        when(sensorRepository.findByRoom("Hall"))
                 .thenReturn(sensors);
 
         EventType strongWind = EventType.STRONG_WIND;
@@ -69,7 +69,7 @@ class SensorServiceImplTest implements WithAssertions {
         sensorService.reactToExternalEvent("Hall", strongWind);
 
         verify(deviceService).notify(uuid, eventDto);
-        verify(sensorRepository).findAllByRoom("Hall");
+        verify(sensorRepository).findByRoom("Hall");
     }
 
     @Test

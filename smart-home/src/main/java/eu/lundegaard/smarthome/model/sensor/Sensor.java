@@ -6,9 +6,7 @@ import eu.lundegaard.smarthome.model.device.Device;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -20,6 +18,8 @@ import java.util.List;
 @Accessors(chain = true)
 public class Sensor extends AbsractEntity {
     private SensorType sensorType;
+    @Column(name = "sensor_state")
+    @Enumerated(EnumType.STRING)
     private SensorState sensorState;
     @OneToMany
     private List<Device> connectedDevices;

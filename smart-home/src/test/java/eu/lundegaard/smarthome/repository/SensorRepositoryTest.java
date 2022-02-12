@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -95,7 +96,54 @@ class SensorRepositoryTest implements WithAssertions {
         assertThat(sensorRepository.findById(id).isEmpty()).isTrue();
     }
 
+    @Test
+    void getConnectedDevicesToSensor() {
+        Device device = getDevice();
+        UUID id = entityManager.persistAndFlush(device).getId();
+        UUID sensorId = entityManager.persistAndFlush(getSensor().setConnectedDevices(List.of(device))).getId();
 
+        List<Device> devices = sensorRepository.getConnectedDevices(sensorId);
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(devices).isNotNull();
+            softAssertions.assertThat(devices.get(0).getId()).isEqualTo(id);
+        });
+    }
+
+    @Test
+    void findByRoom() {
+        UUID sensorId1 = entityManager.persistAndFlush(getSensor()).getId();
+        UUID sensorId2 = entityManager.persistAndFlush(getSensor()).getId();
+
+        List<Sensor> sensors = sensorRepository.findByRoom("Hall");
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(sensors).isNotNull();
+            softAssertions.assertThat(sensors).hasSizeGreaterThan(1);
+        });
+    }
+
+    @Test
+    void findByState() {
+        UUID sensorId1 = entityManager.persistAndFlush(getSensor()).getId();
+        UUID sensorId2 = entityManager.persistAndFlush(getSensor()).getId();
+
+        List<Sensor> sensors = sensorRepository.getAllByState(SensorState.ACTIVE);
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(sensors).isNotNull();
+            softAssertions.assertThat(sensors).hasSizeGreaterThan(1);
+        });
+    }
+
+    private Device getDevice() {
+        return new Device()
+                .setRoom("Hall")
+                .setState(DeviceState.ACTIVE)
+                .setDeviceName("Smart doors")
+                .setConsumedPower(0)
+                .setFunctionalityPercentage(100);
+    }
 
     private Sensor getSensor() {
         return new Sensor()
