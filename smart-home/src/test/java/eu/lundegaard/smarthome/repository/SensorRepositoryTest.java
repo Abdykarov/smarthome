@@ -10,10 +10,12 @@ import eu.lundegaard.smarthome.model.sensor.SensorType;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Ilias Abdykarov 12.02.2022
  */
+@RunWith(SpringRunner.class)
 @DataJpaTest
 class SensorRepositoryTest implements WithAssertions {
 

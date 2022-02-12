@@ -12,7 +12,6 @@ import javax.persistence.Table;
  * @author Ilias Abdykarov
  */
 @Entity
-@Table(name = "DEVICE")
 @Data
 @Accessors(chain = true)
 public class Device extends AbsractEntity {

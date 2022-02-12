@@ -1,0 +1,1 @@
+INSERT INTO sensor (room, sensor_state, sensor_type) VALUES ('Hall', 'IDLE', 'WIND_SENSOR');

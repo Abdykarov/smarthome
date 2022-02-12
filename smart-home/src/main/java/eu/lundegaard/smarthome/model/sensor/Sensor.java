@@ -14,14 +14,15 @@ import java.util.List;
  */
 @Data
 @Entity
-@Table(name = "SENSOR")
 @Accessors(chain = true)
 public class Sensor extends AbsractEntity {
+    @Column(name = "sensor_type")
+    @Enumerated(EnumType.STRING)
     private SensorType sensorType;
     @Column(name = "sensor_state")
     @Enumerated(EnumType.STRING)
     private SensorState sensorState;
+    private String room;
     @OneToMany
     private List<Device> connectedDevices;
-    private String room;
 }
